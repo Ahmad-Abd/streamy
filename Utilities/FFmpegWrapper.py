@@ -55,23 +55,25 @@ import subprocess
 
 
 def decode_audio(audio_src, audio_config):
-    audio_decoding_process = subprocess.Popen(['ffmpeg',
-                                               '-i', audio_src,
+  audio_decoding_process = subprocess.Popen(['ffmpeg',
+                                               '-i', audio_src[0],
                                                '-ac', str(audio_config.channels),
                                                '-ar', str(audio_config.sample_rate),
                                                '-f', 's16le',
                                                'pipe:1'], stdout=subprocess.PIPE)
-    return audio_decoding_process
+  return audio_decoding_process
 
 
 def decode_video(video_src, video_config):
-    audio_decoding_process = subprocess.Popen(['ffmpeg',
+  # Wrong Command ,
+  # Not implemented yet
+  audio_decoding_process = subprocess.Popen(['ffmpeg',
                                                '-i', video_src,
                                                '-ac', str(video_config.channels),
                                                '-ar', str(video_config.sample_rate),
                                                '-f', 's16le',
                                                'pipe:1'], stdout=subprocess.PIPE)
-    return audio_decoding_process
+  return audio_decoding_process
 
 
 def encode_video(audio_src, video_config, dst):
@@ -102,7 +104,7 @@ def encode_audio(video_src, audio_config, dst):
     # encoding process with aggregator
     encoding_process = subprocess.Popen(['ffmpeg',
                                          '-re',
-                                         '-i', video_src,
+                                         '-i', video_src[0],
                                          '-i', 'pipe:0',
                                          '-f', 'flv',
                                          '-c:a', 'aac',

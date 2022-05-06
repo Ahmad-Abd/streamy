@@ -52,12 +52,12 @@ class StreamyManger(Manger):
             exit(-1)
         decoding_process = None
         encoding_process = None
-        if audio_config:
-            decoding_process = decode_audio(audio_src=audio_src,audio_config=audio_config)
-            encoding_process = encode_audio(video_src=video_src,audio_config=audio_config,dst=destination_url)
-        elif video_config:
-            decoding_process = decode_video(video_src=video_src,video_config=video_src)
-            encoding_process = encode_video(audio_src=audio_src,video_config=video_config,dst=destination_url)
+        if request.audio_config:
+            decoding_process = decode_audio(audio_src=audio_src,audio_config=request.audio_config)
+            encoding_process = encode_audio(video_src=video_src,audio_config=request.audio_config,dst=destination_url)
+        elif request.video_config:
+            decoding_process = decode_video(video_src=video_src,video_config=request.video_config)
+            encoding_process = encode_video(audio_src=audio_src,video_config=request.video_config,dst=destination_url)
         else:
             # TPS
             exit(-1)
@@ -73,29 +73,3 @@ class StreamyManger(Manger):
             treated_raw_data_stdin.write(treated_data_chunk)
 
 
-'''
-TEST Example 
-'''
-# config
-stream_url = 'https://youtu.be/spUNpyF58BY'
-rtmp_server_url = 'rtmp://a.rtmp.youtube.com/live2/'
-rtmp_server_key = '3wgb-cv03-ckyy-jmxc-cw42'
-audio_config = AudioConfig()
-#video_config = VideoConfig()
-video_config = None
-#translation_config = TranslationConfig(src_language='ar', dst_language='en')
-translation_config = None
-# build the request
-request_example = StreamyFormRequest(
-    stream_url=stream_url,
-    rtmp_server_url=rtmp_server_url,
-    rtmp_server_key=rtmp_server_key,
-    audio_config=audio_config,
-    video_config=video_config,
-    translate_config=translation_config,
-    secure_mode=False)
-
-# define the manger
-manger = StreamyManger()
-
-manger.serve_request(request=request_example)
