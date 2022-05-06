@@ -5,7 +5,7 @@ class AudioConfig(Message):
     def __init__(self,
                  codec_name='aac',
                  sample_rate=44100,
-                 channels=2,
+                 channels=1,
                  bit_rate=-1):
         self.codec_name = codec_name
         self.sample_rate = sample_rate

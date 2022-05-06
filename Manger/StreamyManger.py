@@ -46,7 +46,8 @@ class StreamyManger(Manger):
         destination_url = None
         try:
             audio_src, video_src = receiver.receive(request.stream_url)
-            destination_url = sender.send(request.rtmp_server_url)
+            destination_url = sender.send(request.rtmp_server_url) + request.rtmp_server_key
+            print(destination_url)
         except Exception as e:
             print(e)
             exit(-1)
