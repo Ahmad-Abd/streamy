@@ -39,6 +39,9 @@ class ThresholdBasedAudioDenoiser(ProcessingSystem):
         return r * np.exp(1j * theta)
 
     def process(self, block):
+        # for more than one channel use numpy.apply_along_axis or take mean on axis 1
+        # convert the bytes block to numpy array
+        block = np.frombuffer(block, dtype=self.sample_type)
         self.old_overlap_chunk.extend(block.tolist())
         block = np.array(self.old_overlap_chunk[:self.block_size]).astype(np.int16)
         del self.old_overlap_chunk[:self.block_size//2]
