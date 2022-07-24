@@ -26,7 +26,13 @@ VALENTINI_NC = ROOT + 'valentini_nc-93fc4337.th'  # Non causal Demucs on Valenti
 def _demucs(pretrained, url, **kwargs):
     model = Demucs(**kwargs, sample_rate=16_000)
     if pretrained:
-        state_dict = torch.load(url, map_location='cpu')
+        try:
+            state_dict = torch.load(url, map_location='cpu')
+        except:
+            print('can\'t find serializable model ')
+            print('model downloading')
+            remote_url = "https://dl.fbaipublicfiles.com/adiyoss/denoiser/" + url.split('/')[-1]
+            state_dict = torch.hub.load_state_dict_from_url(remote_url, map_location='cpu')
         model.load_state_dict(state_dict)
     return model
 
