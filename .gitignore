@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 colab-ffmpeg-cuda\\
 colab-ffmpeg-cuda/
+
+# weights files
+.th
