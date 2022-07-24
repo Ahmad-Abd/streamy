@@ -132,3 +132,4 @@ colab-ffmpeg-cuda/
 
 # weights files
 .th
+*.th

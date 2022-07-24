@@ -2,11 +2,13 @@ import numpy as np
 from scipy.special import jv
 from scipy import signal
 import scipy
+from scipy.io import wavfile
+import os
+import matplotlib.pyplot as plt
+#from ProcessingSystems.ProcessingSystem import ProcessingSystem
 
-from ProcessingSystems.ProcessingSystem import ProcessingSystem
 
-
-class PsdBasedAudioDenoiser(ProcessingSystem):
+class PsdEstimationBasedAudioDenoiser():
     def __init__(self,
                  fs=44100,
                  block_size=2048,
@@ -141,3 +143,15 @@ class PsdBasedAudioDenoiser(ProcessingSystem):
         processed_block = result.astype(self.sample_type).tobytes()
         # return the result
         return processed_block
+    def late_processing(self,data ,sr):
+        i = 0
+        processed_data = []
+        end = (data.shape[0] // self.block_size)*2
+        while i != end:
+            block = data[i * self.block_size:(i + 1) * self.block_size]
+            block = block.tobytes()
+            result = self.process(block)
+            processed_data.extend(np.frombuffer(result,dtype = np.int16).tolist())
+            i += 1
+        return processed_data
+
