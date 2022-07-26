@@ -5,6 +5,7 @@ import scipy
 from scipy.io import wavfile
 import os
 import matplotlib.pyplot as plt
+import math
 #from ProcessingSystems.ProcessingSystem import ProcessingSystem
 
 
@@ -15,7 +16,7 @@ class PsdEstimationBasedAudioDenoiser():
                  threshold=2,
                  sample_type=np.int16,
                  channels=1,
-                 time_smoothing_constant=0.90,
+                 time_smoothing_constant=0.95,
                  snr_estimator_smoothing_constant=0.98):
         self.fs = fs
         self.block_size = block_size
@@ -47,7 +48,8 @@ class PsdEstimationBasedAudioDenoiser():
 
     def compute_DD_aproiri_snr_estimation(self, curr_posteriori_snr, a=0.98):
         squared_prev_X_magnitude = (np.abs(self.prev_X)) ** 2
-        v1 = (squared_prev_X_magnitude / self.prev_squared_W)
+        #v1 = (squared_prev_X_magnitude / self.prev_squared_W)
+        v1 = (((self.prev_G*np.abs(self.curr_frame))**2)/self.prev_squared_W)
         v2 = np.fmax(curr_posteriori_snr - 1, 0)
         DD_aproiri_snr_estimation = self.snr_estimator_smoothing_constant * v1 + (
                 1 - self.snr_estimator_smoothing_constant) * v2
@@ -65,23 +67,37 @@ class PsdEstimationBasedAudioDenoiser():
     def smooth_squared_W_cross_time(self, curr_squared_W, smooth_c=0.9):
         return self.time_smoothing_constant * self.prev_squared_W + (1 - self.time_smoothing_constant) * curr_squared_W
 
-    def bessel(v, X):
+    def bessel(self,v, X):
         return ((1j ** (-v)) * jv(v, 1j * X)).real
 
     def get_gain(self, priori_SNR, aPosterioriSNR):
-        # V = priori_SNR * aPosterioriSNR / (1 + priori_SNR)
-        # gain = np.sqrt((priori_SNR/(priori_SNR+1))*((V+1)/(aPosterioriSNR+0.000001)))
-        # gain = (math.gamma(1.5) * np.sqrt(V)) / aPosterioriSNR * np.exp(-1 * V / 2) * ((1 + V) * bessel(0, V / 2) + V * bessel(1, V / 2))
+        #V = priori_SNR * aPosterioriSNR / (1 + priori_SNR)
+        #gain = np.sqrt((priori_SNR/(priori_SNR+1))*((V+1)/(aPosterioriSNR+0.000001)))
+        #gain = ((1 - np.exp(-2.4*priori_SNR)) / (1 + np.exp(-2.4*priori_SNR)))*(1/(1+np.exp(-0.2*(priori_SNR+1.7)))) 
+        #gain = (math.gamma(1.5) * np.sqrt(V)) / aPosterioriSNR * np.exp(-1 * V / 2) * ((1 + V) * self.bessel(0, V / 2) + V * self.bessel(1, V / 2))
         return priori_SNR / (1 + priori_SNR)
+
+    def convert_to_exp_form(self, data):
+        return np.abs(data), np.angle(data)
+
+    def convert_to_normal_from(self, r, theta):
+        return r * np.exp(1j * theta)
 
     def _process_block(self, Y):
         curr_frame = Y.reshape(-1, 1)
-
+        self.curr_frame = curr_frame
+        
         # step 1 : Compute ˆξ(k, i) using Eq. (5)
         approx_aproiri = self.compute_approx_aproiri(Y=curr_frame)
 
         # setp 2 : Compute E{N2|y; ˆξ(k, i)} by substituting ˆξ(k, i) from Eq.(5) into Eq. (4).
-        expected_noise = self.compute_expected_noise(curr_frame, approx_aproiri, c=35)
+        v = np.var(np.abs(self.curr_frame))
+        if v < 1:
+            c=10
+        else:
+            c=np.sqrt(v)
+        #print(np.sqrt(v))
+        expected_noise = self.compute_expected_noise(curr_frame, approx_aproiri, c=c)
 
         # step 3 : Estimate ξ(k, i) using σ2W(k, i−1) and the DD approach [1], denoted by ˆξDD .
         smoothed_frame = (self.time_smoothing_constant) * (np.abs(curr_frame) ** 2) + (1 - self.time_smoothing_constant) * (np.abs(self.prev_frame) ** 2)
@@ -102,14 +118,20 @@ class PsdEstimationBasedAudioDenoiser():
         curr_posteriori_snr = (np.abs(curr_frame) ** 2) / (W + 0.00001)
         G = self.get_gain(DD_aproiri_snr_estimation, curr_posteriori_snr)
 
-        # step 8 : Smooth the gain function across time to reduce effect of musical noise
+        # step 8 : Smooth the #ain function across time to reduce effect of musical noise
         G = self.time_smoothing_constant * G + (1 - self.time_smoothing_constant) * self.prev_G
 
         # step 9 : calc the enhanced frame using : |X| = G . |Y| . exp(j*phase_of_Y)
         x = G * np.abs(curr_frame) * np.exp(1j * np.angle(curr_frame))
-
+        
         # step 10 : remove unimportant components from the enhanced frame
-        x[np.abs(x) < self.threshold] = 0
+        r, theta = self.convert_to_exp_form(x)
+        mean = np.mean(np.abs(Y))
+        std = np.std(np.abs(x))
+        z_score = (r - mean)/std
+        r[z_score < -2] = 0
+        new_r = r
+        x = self.convert_to_normal_from(new_r, theta)
 
         # re-buffer all important values
         self.prev_X = x.copy()
