@@ -1,6 +1,5 @@
 from Messages.AudioConfig import AudioConfig
 from Messages.StreamyFormRequest import StreamyFormRequest
-from Messages.TranslationConfig import TranslationConfig
 from Messages.VideoConfig import VideoConfig
 from ProcessingSystems.AudioProcessingSystem.ThresholdBasedAudioDenoiser import ThresholdBasedAudioDenoiser
 from Receiver.ReceiverFactory import ReceiverFactory

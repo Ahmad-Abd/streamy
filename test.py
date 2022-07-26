@@ -4,9 +4,8 @@ TEST Example
 from Manger.StreamyManger import StreamyManger
 from Messages.AudioConfig import AudioConfig
 from Messages.StreamyFormRequest import StreamyFormRequest
-from Messages.TranslationConfig import TranslationConfig
 from Messages.VideoConfig import VideoConfig
-from ProcessingSystems.AudioProcessingSystem.ThresholdBasedAudioDenoiser import ThresholdBasedAudioDenoiser
+from ProcessingSystems.AudioProcessingSystem.ThresholdingBasedAudioDenoiser.ThresholdBasedAudioDenoiser import ThresholdBasedAudioDenoiser
 from Receiver.ReceiverFactory import ReceiverFactory
 from Manger.Manger import Manger
 from Sender.SenderFactory import SenderFactory
