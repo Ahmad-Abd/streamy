@@ -11,7 +11,10 @@ from Sender.Sender import Sender
 class RTMPSender(Sender):
     def __init__(self):
         super().__init__()
-        pass
 
-    def send(self, url):
-        return url
+    def set_config(self, request):
+        super(RTMPSender, self).set_config(request)
+        self.dst = request.rtmp_server_url
+
+    def send(self):
+        return self.dst + self.request.rtmp_server_key

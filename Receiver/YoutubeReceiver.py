@@ -18,31 +18,41 @@ class YoutubeReceiver(Receiver):
             print(e)
             return None
 
-    def get_video_url(self, extension='mp4', resolution='720p'):
+    def get_video_url(self, extension='mp4', resolution='480p'):
+        # if best resolution is detected then return best video url
         if resolution == 'best':
-            # get info for 'https://www.youtube.com/watch?v=D2zMc5Fw4m0' videostreams[9] if found only r_frame_rate
-            # what if mp4 is Not available !!!!!!!!!!
             return [self.youtube_src.getbestvideo('mp4').url]
+        # get all videos urls
         play = self.youtube_src.videostreams
+        # create a valid videos map where :
+        #           the key is video resolution (str)
+        #           the value is list of videos urls on this resolution (list)
         valid_videos = {}
+        # filter all videos urls depending on detected extension and all video at least with detected resolution
         for video in play:
             if video.extension == extension and video.dimensions[1] <= int(resolution[:-1]):
                 if str(video.dimensions) in valid_videos.keys():
                     valid_videos[str(video.dimensions)].append(video)
                 else:
                     valid_videos[str(video.dimensions)] = [video]
+        # get highest video resolution from filtered videos urls
         highest_available_resolution = list(valid_videos.keys())[-1]
+        # cast above videos urls as list
         valid_urls = [video.url for video in valid_videos[highest_available_resolution]]
+        # return the result
         return valid_urls
 
     def get_audio_url(self, extension='m4a', resolution=None):
+        # if best audio depending on sample rate
         if resolution == 'best':
             return [self.youtube_src.getbestaudio('m4a').url]
+        # get all audios urls
         play = self.youtube_src.audiostreams
         valid_urls = []
         for audio in play:
             if audio.extension == extension:
                 valid_urls.append(audio.url)
+        # return the result
         return valid_urls
 
     def receive(self, url):
