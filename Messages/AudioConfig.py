@@ -1,15 +1,19 @@
 from Messages.Message import Message
-
+import numpy as np
 
 class AudioConfig(Message):
     def __init__(self,
                  codec_name='aac',
                  sample_rate=44100,
+                 block_size=2048,
+                 dtype = np.int16,
                  channels=1,
                  bit_rate=-1):
         self.codec_name = codec_name
         self.sample_rate = sample_rate
+        self.block_size = block_size
         self.channels = channels
+        self.dtype = dtype
         self.bit_rate = bit_rate
 
     def from_json(self, json_object):

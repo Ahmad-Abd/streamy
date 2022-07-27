@@ -4,7 +4,6 @@ from scipy import signal
 import scipy
 from scipy.io import wavfile
 import os
-import matplotlib.pyplot as plt
 import math
 #from ProcessingSystems.ProcessingSystem import ProcessingSystem
 

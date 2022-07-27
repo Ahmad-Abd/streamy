@@ -55,13 +55,15 @@ import subprocess
 
 
 def decode_audio(audio_src, audio_config):
-  audio_decoding_process = subprocess.Popen(['ffmpeg',
+    print('audio decode\n\n\n')
+    audio_decoding_process = subprocess.Popen(['ffmpeg',
+                                               '-thread_queue_size', '1000000',
                                                '-i', audio_src[0],
                                                '-ac', str(audio_config.channels),
                                                '-ar', str(audio_config.sample_rate),
                                                '-f', 's16le',
                                                'pipe:1'], stdout=subprocess.PIPE)
-  return audio_decoding_process
+    return audio_decoding_process
 
 
 def decode_video(video_src, video_config):
@@ -71,12 +73,14 @@ def decode_video(video_src, video_config):
                                                '-i', video_src,
                                                '-ac', str(video_config.channels),
                                                '-ar', str(video_config.sample_rate),
+                                                '-thread_queue_size', '1000000',
                                                '-f', 's16le',
                                                'pipe:1'], stdout=subprocess.PIPE)
   return audio_decoding_process
 
 
 def encode_video(audio_src, video_config, dst):
+    print('video encode\n\n\n\n\n')
     # encoding process with aggregator
     encoding_process = subprocess.Popen(['ffmpeg',
                                          '-re',
@@ -101,16 +105,20 @@ def encode_video(audio_src, video_config, dst):
     return encoding_process
 
 def encode_audio(video_src, audio_config, dst):
+    print('audio encode\n\n\n\n\n')
     # encoding process with aggregator
     encoding_process = subprocess.Popen(['ffmpeg',
                                          '-re',
-                                         '-i', video_src[0],
+                                         '-i', video_src[1],
+                                         '-c:v', 'copy',
                                          '-f', 's16le',
                                          '-ac', str(audio_config.channels),
                                          '-ar', str(audio_config.sample_rate),
+                                         '-thread_queue_size', '1000000',
                                          '-i', 'pipe:0',
                                          '-f', 'flv',
                                          '-c:a', 'aac',
-                                         '-c:v', 'copy',
+                                         '-q:a', '1',
+                                         '-aac_coder', 'fast',
                                          dst], stdin=subprocess.PIPE)
     return encoding_process

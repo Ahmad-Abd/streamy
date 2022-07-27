@@ -9,6 +9,8 @@ class StreamyFormRequest(Message):
                  rtmp_server_key,
                  audio_config,
                  video_config,
+                 aps_type='threshold',  # threshold ,psd ,demucs
+                 vps_type='selfie',  # selfie ,motion
                  secure_mode=False,
                  block_audio=False,
                  block_video=False
@@ -21,6 +23,8 @@ class StreamyFormRequest(Message):
         self.audio_config = audio_config
         self.block_audio = block_audio
         self.block_video = block_video
+        self.aps_type = aps_type
+        self.vps_type = vps_type
 
     def from_json(self, json_object):
         pass

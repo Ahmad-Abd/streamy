@@ -1,9 +1,10 @@
 #from ProcessingSystems.ProcessingSystem import ProcessingSystem
 import torch
 import torchaudio
-from denoiser import pretrained
-from denoiser.demucs import DemucsStreamer
-from denoiser.dsp import convert_audio
+import os
+from ProcessingSystems.AudioProcessingSystem.DemucsBasedAudioDenoiser.denoiser import pretrained
+from ProcessingSystems.AudioProcessingSystem.DemucsBasedAudioDenoiser.denoiser.demucs import DemucsStreamer
+from ProcessingSystems.AudioProcessingSystem.DemucsBasedAudioDenoiser.denoiser.dsp import convert_audio
 from scipy.io import wavfile
 import numpy as np
 from IPython import display as disp

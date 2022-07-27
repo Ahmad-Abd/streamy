@@ -1,26 +1,57 @@
+
 from Messages.AudioConfig import AudioConfig
 from Messages.StreamyFormRequest import StreamyFormRequest
 from Messages.VideoConfig import VideoConfig
 from ProcessingSystems.AudioProcessingSystem.ThresholdingBasedAudioDenoiser.ThresholdBasedAudioDenoiser import ThresholdBasedAudioDenoiser
+from ProcessingSystems.AudioProcessingSystem.PsdEstimationBasedAudioDenoiser.PsdEstimationBasedAudioDenoiser import PsdEstimationBasedAudioDenoiser
+from ProcessingSystems.AudioProcessingSystem.DemucsBasedAudioDenoiser.DemucsBasedAudioDenoiser import DemucsBasedAudioDenoiser
 from Receiver.ReceiverFactory import ReceiverFactory
 from Manger.Manger import Manger
 from Sender.SenderFactory import SenderFactory
 from Utilities.FFmpegWrapper import *
+import numpy as np
 
 
 class StreamyManger(Manger):
     receiver_factory = ReceiverFactory()
     sender_factory = SenderFactory()
-
+    def __get_aps(self,aps_type):
+        if aps_type == 'threshold':
+            print('Initializing Threshold Based Audio Denoiser...')
+            return ThresholdBasedAudioDenoiser()
+        if aps_type == 'psd':
+            print('Initializing PSD Estimation Based Audio Denoiser...')
+            return PsdEstimationBasedAudioDenoiser()
+        if aps_type == 'demucs':
+            print('Initializing Demucs Based Audio Denoiser...')
+            return DemucsBasedAudioDenoiser()
+        print('[Error] Not Supported APS....')
+        exit(-1)
+    '''
+    def __get_vps(self,vps_type):
+        if aps_type == 'threshold':
+            print('Initializing Threshold Based Audio Denoiser...')
+            return ThresholdBasedAudioDenoiser()
+        if aps_type == 'psd':
+            print('Initializing PSD Estimation Based Audio Denoiser...')
+            return PsdEstimationBasedAudioDenoiser()
+        print('[Error] Not Supported APS....')
+        exit(-1)
+    '''
     def __get_processing_system(self, request):
         processing_system, chunk_size = None, None
         if request.video_config:
             chunk_size = request.video_config.width * request.video_config.height * 3
         elif request.audio_config:
-            processing_system = ThresholdBasedAudioDenoiser()
-            chunk_size = request.audio_config.sample_rate * request.audio_config.channels
+            processing_system = self.__get_aps(request.aps_type)
+            processing_system.fs = request.audio_config.sample_rate
+            processing_system.block_size = request.audio_config.block_size
+            processing_system.sample_type = request.audio_config.dtype
+            processing_system.channels = request.audio_config.channels
+            size_of_sample_in_bytes = np.dtype(request.audio_config.dtype).itemsize
+            chunk_size = processing_system.block_size * size_of_sample_in_bytes
         else:
-            print('No Detected Config.....')
+            print('[Error] Not Detected Config.....')
             exit(-1)
         return processing_system, chunk_size
 
@@ -29,7 +60,7 @@ class StreamyManger(Manger):
         return urls[0]
 
     def serve_request(self, request):
-        # 1. Create (APS or VPS or TPS) Depending on Request
+        # 1. Create (APS or VPS) Depending on Request
         processing_system, chunk_size = self.__get_processing_system(request)
 
         # 2. Create Receiver using Receiver Factory Depending on Request URL
@@ -68,7 +99,8 @@ class StreamyManger(Manger):
         while True:
             # read data from the receiver
             untreated_data_chunk = untreated_raw_data_stdout.read(chunk_size)
-            # process data using processing system
-            treated_data_chunk = processing_system.process(untreated_data_chunk)
-            # write processed data to the sender
-            treated_raw_data_stdin.write(treated_data_chunk)
+            if untreated_data_chunk:
+                # process data using processing system
+                treated_data_chunk = processing_system.process(untreated_data_chunk)
+                # write processed data to the sender
+                treated_raw_data_stdin.write(treated_data_chunk)
