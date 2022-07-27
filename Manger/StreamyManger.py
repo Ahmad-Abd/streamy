@@ -56,6 +56,7 @@ class StreamyManger(Manger):
         decoding_process = None
         encoding_process = None
         if request.audio_config:
+            print('audio request')
             decoding_process = decode_audio(audio_src=audio_src, audio_config=request.audio_config)
             encoding_process = encode_audio(video_src=video_src, audio_config=request.audio_config, dst=destination_url)
         elif request.video_config:

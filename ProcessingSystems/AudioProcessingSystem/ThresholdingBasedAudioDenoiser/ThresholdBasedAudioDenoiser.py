@@ -3,7 +3,7 @@ from scipy.special import jv
 from scipy import signal
 import scipy
 from scipy.io import wavfile
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import os
 #from ProcessingSystems.ProcessingSystem import ProcessingSystem
 class ThresholdBasedAudioDenoiser():

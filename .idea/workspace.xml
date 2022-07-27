@@ -5,16 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="be94fe52-e6d7-47fc-9fc7-741a32c4552f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Streamy v1.0.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Streamy v1.0.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manger/StreamyManger.py" beforeDir="false" afterPath="$PROJECT_DIR$/Manger/StreamyManger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Messages/StreamyFormRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Messages/StreamyFormRequest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receiver/Receiver.py" beforeDir="false" afterPath="$PROJECT_DIR$/Receiver/Receiver.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receiver/ReceiverFactory.py" beforeDir="false" afterPath="$PROJECT_DIR$/Receiver/ReceiverFactory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProcessingSystems/AudioProcessingSystem/ThresholdingBasedAudioDenoiser/ThresholdBasedAudioDenoiser.py" beforeDir="false" afterPath="$PROJECT_DIR$/ProcessingSystems/AudioProcessingSystem/ThresholdingBasedAudioDenoiser/ThresholdBasedAudioDenoiser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Receiver/YoutubeReceiver.py" beforeDir="false" afterPath="$PROJECT_DIR$/Receiver/YoutubeReceiver.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sender/RTMPSender.py" beforeDir="false" afterPath="$PROJECT_DIR$/Sender/RTMPSender.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sender/Sender.py" beforeDir="false" afterPath="$PROJECT_DIR$/Sender/Sender.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

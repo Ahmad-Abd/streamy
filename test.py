@@ -13,7 +13,8 @@ from Utilities.FFmpegWrapper import *
 
 
 # config
-stream_url = 'https://youtu.be/spUNpyF58BY'
+#stream_url = 'https://youtu.be/spUNpyF58BY'
+stream_url = 'https://youtu.be/Gd6RVwRmt9w'
 rtmp_server_url = 'rtmp://a.rtmp.youtube.com/live2/'
 rtmp_server_key = '3wgb-cv03-ckyy-jmxc-cw42'
 audio_config = AudioConfig()

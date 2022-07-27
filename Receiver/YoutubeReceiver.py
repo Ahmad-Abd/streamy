@@ -24,6 +24,7 @@ class YoutubeReceiver(Receiver):
             return [self.youtube_src.getbestvideo('mp4').url]
         # get all videos urls
         play = self.youtube_src.videostreams
+        print(play)
         # create a valid videos map where :
         #           the key is video resolution (str)
         #           the value is list of videos urls on this resolution (list)
