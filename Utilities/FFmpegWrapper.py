@@ -65,23 +65,41 @@ def decode_audio(audio_src, audio_config):
                                                'pipe:1'], stdout=subprocess.PIPE)
     return audio_decoding_process
 
-
 def decode_video(video_src, video_config):
-  # Wrong Command ,
-  # Not implemented yet
-  audio_decoding_process = subprocess.Popen(['ffmpeg',
-                                               '-i', video_src,
-                                               '-ac', str(video_config.channels),
-                                               '-ar', str(video_config.sample_rate),
-                                                '-thread_queue_size', '1000000',
-                                               '-f', 's16le',
+    video_decoding_process = subprocess.Popen(['ffmpeg',
+                                               '-thread_queue_size', '1000000',
+                                               '-i', video_src[0],
+                                               '-f', 'rawvideo',
+                                               '-pix_fmt' ,'bgr24',
                                                'pipe:1'], stdout=subprocess.PIPE)
-  return audio_decoding_process
+    return video_decoding_process
 
 
 def encode_video(audio_src, video_config, dst):
     print('video encode\n\n\n\n\n')
+    print('audio src :           ',audio_src)
     # encoding process with aggregator
+    encoding_process = subprocess.Popen(['ffmpeg',
+                       '-re',
+                       '-i', audio_src[0],
+                      '-f', 'rawvideo',
+                      '-s', '854x480',
+                      '-pix_fmt', 'bgr24',
+                      '-thread_queue_size', '10000',
+                      '-i', 'pipe:0',
+                      '-c:v', 'libx264',
+                      '-c:a', 'copy',
+                      # '-maxrate','50k',
+                      # '-bufsize','12000k',
+                      '-color_primaries', 'bt709',
+                      '-profile:v', 'main',
+                      '-pix_fmt', 'yuv420p',
+                      '-crf', '27',
+                      '-preset', 'veryfast',
+                      '-g', '40',
+                      '-f','flv',
+                      dst], stdin=subprocess.PIPE)
+    '''
     encoding_process = subprocess.Popen(['ffmpeg',
                                          '-re',
                                          '-hwaccel', 'cuda',
@@ -102,6 +120,7 @@ def encode_video(audio_src, video_config, dst):
                                          '-crf', '28',
                                          '-g', '40',
                                          dst], stdin=subprocess.PIPE)
+        '''
     return encoding_process
 
 def encode_audio(video_src, audio_config, dst):

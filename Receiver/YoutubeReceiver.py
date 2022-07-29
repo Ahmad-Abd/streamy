@@ -18,7 +18,7 @@ class YoutubeReceiver(Receiver):
             print(e)
             return None
 
-    def get_video_url(self, extension='mp4', resolution='480p'):
+    def __get_video_url(self, extension='mp4', resolution='480p'):
         # if best resolution is detected then return best video url
         if resolution == 'best':
             return [self.youtube_src.getbestvideo('mp4').url]
@@ -43,7 +43,7 @@ class YoutubeReceiver(Receiver):
         # return the result
         return valid_urls
 
-    def get_audio_url(self, extension='m4a', resolution=None):
+    def __get_audio_url(self, extension='m4a', resolution=None):
         # if best audio depending on sample rate
         if resolution == 'best':
             return [self.youtube_src.getbestaudio('m4a').url]
@@ -58,8 +58,8 @@ class YoutubeReceiver(Receiver):
 
     def receive(self, url):
         self.__set_src(url)
-        video_src = self.get_video_url()
-        audio_src = self.get_audio_url()
+        video_src = self.__get_video_url()
+        audio_src = self.__get_audio_url()
         if len(video_src) == 0 or len(audio_src) == 0:
             raise ReceivingURLNotFoundException()
         return audio_src, video_src

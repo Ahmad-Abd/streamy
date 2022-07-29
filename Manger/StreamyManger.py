@@ -1,3 +1,4 @@
+import cv2
 
 from Messages.AudioConfig import AudioConfig
 from Messages.StreamyFormRequest import StreamyFormRequest
@@ -5,6 +6,7 @@ from Messages.VideoConfig import VideoConfig
 from ProcessingSystems.AudioProcessingSystem.ThresholdingBasedAudioDenoiser.ThresholdBasedAudioDenoiser import ThresholdBasedAudioDenoiser
 from ProcessingSystems.AudioProcessingSystem.PsdEstimationBasedAudioDenoiser.PsdEstimationBasedAudioDenoiser import PsdEstimationBasedAudioDenoiser
 from ProcessingSystems.AudioProcessingSystem.DemucsBasedAudioDenoiser.DemucsBasedAudioDenoiser import DemucsBasedAudioDenoiser
+from ProcessingSystems.VideoProcessingSystems.SelfieSegmetationBasedCAE import SelfieSegmetationBasedCAE
 from Receiver.ReceiverFactory import ReceiverFactory
 from Manger.Manger import Manger
 from Sender.SenderFactory import SenderFactory
@@ -27,21 +29,26 @@ class StreamyManger(Manger):
             return DemucsBasedAudioDenoiser()
         print('[Error] Not Supported APS....')
         exit(-1)
-    '''
     def __get_vps(self,vps_type):
+        return SelfieSegmetationBasedCAE()
+        '''
         if aps_type == 'threshold':
             print('Initializing Threshold Based Audio Denoiser...')
             return ThresholdBasedAudioDenoiser()
         if aps_type == 'psd':
             print('Initializing PSD Estimation Based Audio Denoiser...')
             return PsdEstimationBasedAudioDenoiser()
-        print('[Error] Not Supported APS....')
+        print('[Error] Not Supported VPS....')
         exit(-1)
-    '''
+        '''
+        return
     def __get_processing_system(self, request):
         processing_system, chunk_size = None, None
         if request.video_config:
-            chunk_size = request.video_config.width * request.video_config.height * 3
+            print('Video Processing')
+            processing_system = self.__get_vps(request.aps_type)
+            chunk_size = 480 * 854 * 3
+            #chunk_size = request.video_config.width * request.video_config.height * 3
         elif request.audio_config:
             processing_system = self.__get_aps(request.aps_type)
             processing_system.fs = request.audio_config.sample_rate
@@ -58,7 +65,7 @@ class StreamyManger(Manger):
     def __select_url(self, urls):
         # Should select h264 only for video or same as codec
         return urls[0]
-
+    import cv2
     def serve_request(self, request):
         # 1. Create (APS or VPS) Depending on Request
         processing_system, chunk_size = self.__get_processing_system(request)
@@ -99,6 +106,9 @@ class StreamyManger(Manger):
         while True:
             # read data from the receiver
             untreated_data_chunk = untreated_raw_data_stdout.read(chunk_size)
+            #cv2.imshow('hello', np.frombuffer(untreated_data_chunk,dtype=np.uint8).reshape(480,854,3))
+            #if cv2.waitKey(1) & 0xFF == 27:
+            #    exit()
             if untreated_data_chunk:
                 # process data using processing system
                 treated_data_chunk = processing_system.process(untreated_data_chunk)

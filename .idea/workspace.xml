@@ -7,11 +7,7 @@
     <list default="true" id="be94fe52-e6d7-47fc-9fc7-741a32c4552f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manger/StreamyManger.py" beforeDir="false" afterPath="$PROJECT_DIR$/Manger/StreamyManger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Messages/AudioConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/Messages/AudioConfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Messages/StreamyFormRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Messages/StreamyFormRequest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProcessingSystems/AudioProcessingSystem/DemucsBasedAudioDenoiser/DemucsBasedAudioDenoiser.py" beforeDir="false" afterPath="$PROJECT_DIR$/ProcessingSystems/AudioProcessingSystem/DemucsBasedAudioDenoiser/DemucsBasedAudioDenoiser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProcessingSystems/AudioProcessingSystem/PsdEstimationBasedAudioDenoiser/PsdEstimationBasedAudioDenoiser.py" beforeDir="false" afterPath="$PROJECT_DIR$/ProcessingSystems/AudioProcessingSystem/PsdEstimationBasedAudioDenoiser/PsdEstimationBasedAudioDenoiser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProcessingSystems/AudioProcessingSystem/ThresholdingBasedAudioDenoiser/ThresholdBasedAudioDenoiser.py" beforeDir="false" afterPath="$PROJECT_DIR$/ProcessingSystems/AudioProcessingSystem/ThresholdingBasedAudioDenoiser/ThresholdBasedAudioDenoiser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiver/YoutubeReceiver.py" beforeDir="false" afterPath="$PROJECT_DIR$/Receiver/YoutubeReceiver.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utilities/FFmpegWrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/FFmpegWrapper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
@@ -58,10 +54,13 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/test.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/ProcessingSystems/VideoProcessingSystems" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\HP\Desktop\خامسة\مشروع تخرج\streamy\ProcessingSystems\VideoProcessingSystems" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\HP\Desktop\خامسة\مشروع تخرج\مسودة الدراسة المرجعية للمشروع\Streamy v1.0\Processors" />
     </key>

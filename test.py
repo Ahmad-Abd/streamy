@@ -18,11 +18,16 @@ import numpy as np
 # cc to world
 stream_url = 'https://youtu.be/J7GY1Xg6X20'
 # bbc live
-stream_url = 'https://youtu.be/HxI2TxhhS9A'
-rtmp_server_url = 'rtmp://a.rtmp.youtube.com/live2/'
-rtmp_server_key = '3wgb-cv03-ckyy-jmxc-cw42'
-audio_config = AudioConfig(sample_rate=44100,block_size=2048,channels=1,dtype=np.int16)
-video_config = None
+#stream_url = 'https://youtu.be/3D4lLdU2vkw'
+stream_url = 'https://youtu.be/7SsNdqQQ69Y'
+#rtmp_server_url = 'rtmp://a.rtmp.youtube.com/live2/'
+#rtmp_server_key = '3wgb-cv03-ckyy-jmxc-cw42'
+rtmp_server_url = 'rtmps://dc4-1.rtmp.t.me/s/'
+rtmp_server_key = '1457753449:dxkMKpmmBgVicOZwA7kAaA'
+#audio_config = AudioConfig(sample_rate=44100,block_size=2048,channels=1,dtype=np.int16)
+audio_config = None
+#video_config = None
+video_config = VideoConfig()
 translation_config = None
 
 # build the request
