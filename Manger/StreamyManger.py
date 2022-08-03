@@ -6,18 +6,20 @@ from Receiver.ReceiverFactory import ReceiverFactory
 from Manger.Manger import Manger
 from Sender.SenderFactory import SenderFactory
 from Utilities.FFmpegWrapper import *
+from ffprobeTest.test import *
 from sklearn.linear_model import LinearRegression
 import pandas as pd
 import numpy as np
-pd.read_csv()
-np.reshape()
-LinearRegression().fit()
 class StreamyManger(Manger):
     # create a ReceiverFactory as a static object
-    receiver_factory = ReceiverFactory()
+    RECEIVER_FACTORY = ReceiverFactory()
 
     # create a SenderFactory as a static object
-    sender_factory = SenderFactory()
+    SENDER_FACTORY = SenderFactory()
+
+    # Define Supported Video and Audio Codec
+    SUPPORTED_AUDIO_CODEC = ['aac']
+    SUPPORTED_VIDEO_CODEC = ['h264']
 
     def __get_aps(self,aps_type):
         """
@@ -26,15 +28,15 @@ class StreamyManger(Manger):
         :return: object of ProcessingSystem
         """
         if aps_type == 'threshold':
-            print('Initializing Threshold Based Audio Denoiser...')
+            print('\n\033[1;94mInitializing Threshold Based Audio Denoiser...\033[0m')
             return ThresholdBasedAudioDenoiser()
         if aps_type == 'psd':
-            print('Initializing PSD Estimation Based Audio Denoiser...')
-            return PsdEstimationBasedAudioDenoiser()
+            print('\n\033[1;94mInitializing PSD Estimation Based Audio Denoiser...\033[0m')
+            return PsdEstimationBasedAudioDenoiser(threshold=0.001, block_size=1024, time_smoothing_constant=0.2)
         if aps_type == 'demucs':
-            print('Initializing Demucs Based Audio Denoiser...')
+            print('\n\033[1;94mInitializing Demucs Estimation Based Audio Denoiser...\033[0m')
             return DemucsBasedAudioDenoiser()
-        print('[Error] Not Supported APS....')
+        print('\033[1;91m[Error] Not Supported Audio Processing System....\033[0m')
         exit(-1)
 
     def __get_vps(self,vps_type):
@@ -44,14 +46,14 @@ class StreamyManger(Manger):
         :return: object of ProcessingSystem
         """
         if vps_type == 'selfie':
-            print('Initializing Selfie Segmentation Based CAE...')
+            print('\n\033[1;94mInitializing Selfie Segmentation Based CAE...\033[0m')
             return SelfieSegmetationBasedCAE()
         '''
         if vps_type == 'motion':
             print('Initializing Motion Based CAE...')
             return PsdEstimationBasedAudioDenoiser()
         '''
-        print('[Error] Not Supported VPS....')
+        print('\033[1;91m[Error] Not Supported Video Processing System....\033[0m')
         exit(-1)
 
     def __get_processing_system(self, request):
@@ -64,17 +66,20 @@ class StreamyManger(Manger):
         processing_system, chunk_size = None, None
         # check if video config in the request in not none then create and vps using __get_vps()
         if request.video_config:
-            print('Video Processing Mode...')
+            print('\n\033[1;32mVideo Processing Mode...\033[0m')
             # create the vps using __get_vps()
-            processing_system = self.__get_vps(request.aps_type)
+            processing_system = self.__get_vps(request.vps_type)
+            assert processing_system is not None,exit(-1)
             # set requests video config in the created vps
+            processing_system.size = (request.video_config.width,request.video_config.height)
             # chunk_size is equal to size of image * 3 is number of channels
             chunk_size = request.video_config.width * request.video_config.height * 3
         # check if audio config in the request in not none then create and aps using __get_aps()
         elif request.audio_config:
-            print('Audio Processing Mode...')
+            print('\n\033[1;32mAudio Processing Mode...\033[0m')
             # create the aps using __get_aps()
             processing_system = self.__get_aps(request.aps_type)
+            assert processing_system is not None, exit(-1)
             # set requests audio config in the created aps
             processing_system.fs = request.audio_config.sample_rate
             processing_system.block_size = request.audio_config.block_size
@@ -85,25 +90,45 @@ class StreamyManger(Manger):
             chunk_size = processing_system.block_size * size_of_sample_in_bytes
         else:
             # not detected config in the request
-            print('[Error] Not Detected Config.....')
+            print('\033[1;91m[Error] Not Detected Config....\033[0m')
             exit(-1)
         # return the result
         return processing_system, chunk_size
 
-    def __select_url(self, urls):
-        # Should select h264 only for video or same as codec
-        return urls[0]
+    def __select_url(self, urls, stream_type ='v'):
+        """
+        Filter The Audio and Video URLs depending on supported video and audio codec in our system
+        :param urls: list of audio or video urls to filter
+        :return:
+        """
+        for url in urls:
+            url_stream_info = get_stream_info(url, stream_type=stream_type)
+            if stream_type == 'v':
+                if url_stream_info.codec_name in StreamyManger.SUPPORTED_VIDEO_CODEC:
+                    print(f'\033[1mInput Video Stream Info => {url_stream_info}\033[0m\n')
+                    return url ,url_stream_info
+            elif stream_type == 'a':
+                if url_stream_info.codec_name in StreamyManger.SUPPORTED_AUDIO_CODEC:
+                    print(f'\033[1mInput Audio Stream Info => {url_stream_info}\033[0m')
+                    return url ,url_stream_info
+            else:
+                # not detected config in the request
+                print('\033[1;91m[Error] Not Detected Config....\033[0m')
+                exit(-1)
+        print('\033[1;91m[Error] Streams Codec Are Not Supported....\033[0m')
+        exit(-1)
 
     def serve_request(self, request):
         # 1. Create (APS or VPS) Depending on Request
         processing_system, chunk_size = self.__get_processing_system(request)
+        print('\n\033[1;94mDone...\033[0m')
 
         # 2. Create Receiver using Receiver Factory Depending on Request URL
-        receiver = StreamyManger.receiver_factory.get_receiver(url=request.stream_url)
+        receiver = StreamyManger.RECEIVER_FACTORY.get_receiver(url=request.stream_url)
         receiver.set_config(request=request)
 
         # 3. Create Sender using Sender Factory Depending on Request URL
-        sender = StreamyManger.sender_factory.get_sender(url=request.rtmp_server_url)
+        sender = StreamyManger.SENDER_FACTORY.get_sender(url=request.rtmp_server_url)
         sender.set_config(request=request)
 
         # Streamy Serve Pipeline: Receive -> Process -> Send
@@ -121,24 +146,38 @@ class StreamyManger(Manger):
         decoding_process = None
         # create a encoding process as None
         encoding_process = None
+        # filter video urls depending on supported codec
+        video_src ,input_video_src_config = self.__select_url(video_src)
+        # filter audio urls depending on supported codec
+        audio_src ,input_audio_src_config = self.__select_url(audio_src, stream_type='a')
         # if Audio Config is detected in the received request then create a decode and encode audio processes
         if request.audio_config:
             # create the decoding audio process
-            decoding_process = decode_audio(audio_src=audio_src, audio_config=request.audio_config)
+            decoding_process = decode_audio(audio_src=audio_src,
+                                            dst_audio_config=request.audio_config,
+                                            src_audio_config=input_audio_src_config)
             # create the encoding audio process
-            encoding_process = encode_audio(video_src=video_src, audio_config=request.audio_config, dst=destination_url)
+            encoding_process = encode_audio(video_src=video_src,
+                                            dst_audio_config=request.audio_config,
+                                            src_audio_config=input_audio_src_config,
+                                            dst=destination_url)
         # else if Audio Config is detected in the received request then create a decode and encode audio processes
         elif request.video_config:
             # create the decoding video process
-            decoding_process = decode_video(video_src=video_src, video_config=request.video_config)
-            # create the decoding audio process
-            encoding_process = encode_video(audio_src=audio_src, video_config=request.video_config, dst=destination_url)
+            decoding_process = decode_video(video_src=video_src,
+                                            dst_video_config=request.video_config,
+                                            src_video_config=input_video_src_config)
+            # create the decoding video process
+            encoding_process = encode_video(audio_src=audio_src,
+                                            dst_video_config=request.video_config,
+                                            src_video_config=input_video_src_config,
+                                            dst=destination_url)
         # attach process to sender and receiver!!!!!!!!!!!!!!!!
         # untreated raw data is the decoding process stdout
         untreated_raw_data_stdout = decoding_process.stdout
         treated_raw_data_stdin = encoding_process.stdin
         while True:
-            # read data from the receiver
+            # read data from the receiver stdout pipe
             untreated_data_chunk = untreated_raw_data_stdout.read(chunk_size)
             #cv2.imshow('hello', np.frombuffer(untreated_data_chunk,dtype=np.uint8).reshape(480,854,3))
             #if cv2.waitKey(1) & 0xFF == 27:
@@ -146,5 +185,6 @@ class StreamyManger(Manger):
             if untreated_data_chunk:
                 # process data using processing system
                 treated_data_chunk = processing_system.process(untreated_data_chunk)
-                # write processed data to the sender
+                #print(treated_data_chunk)
+                # write processed data to the sender stdin pipe
                 treated_raw_data_stdin.write(treated_data_chunk)

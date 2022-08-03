@@ -100,6 +100,7 @@ class PsdEstimationBasedAudioDenoiser():
             c = 1
         else:
             c = 35
+        c = 10
         expected_noise = self.compute_expected_noise(
             curr_frame, approx_aproiri, c=c)
         # step 3 : Estimate ξ(k, i) using σ2W(k, i−1) and the DD approach [1], denoted by ˆξDD .
@@ -154,7 +155,7 @@ class PsdEstimationBasedAudioDenoiser():
     def process(self, block):
         # for more than one channel use numpy.apply_along_axis or take mean on axis 1
         # convert the bytes block to numpy array
-        block = np.frombuffer(block, dtype=self.sample_type)
+        block = np.frombuffer(block, dtype=np.int16)
         self.old_overlap_chunk.extend(block.tolist()[:(self.block_size // 2)])
         self.frames.append(self.old_overlap_chunk.copy())
         self.frames.append(block.tolist())
@@ -177,7 +178,7 @@ class PsdEstimationBasedAudioDenoiser():
             results.extend(
                 reconstructed[:(self.block_size // 2)].copy().tolist())
             self.buffer = reconstructed[(self.block_size // 2):].copy()
-        processed_block = np.array(results, dtype=self.sample_type).tobytes()
+        processed_block = np.array(results, dtype=np.int16).tobytes()
         self.frames = []
         # return the result
         return processed_block

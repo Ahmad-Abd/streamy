@@ -16,7 +16,7 @@ mp_selfie_segmentation = mp.solutions.selfie_segmentation
 class SelfieSegmetationBasedCAE(ProcessingSystem):
     def __init__(self,
                  accurate=False,
-                 size=(854, 480),  # w x h
+                 size=(854, 480), # w x h
                  erode_kernel_size=19):
         # accurate model 0 (slower but more accurate) use x*x image as input
         # faster model 1 (faster but less accurate) use x*x image as input
@@ -82,20 +82,14 @@ class SelfieSegmetationBasedCAE(ProcessingSystem):
             self.prev_fgmask = mask.copy()
         else:
             mask = self.prev_fgmask.copy()
-        # cv2.imshow('h', cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        # cv2.imshow('hello', mask)
-        # if cv2.waitKey(1) & 0xFF == 27:
-        #    exit()
+        #cv2.imshow('h', cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+        #cv2.imshow('hello', mask)
+        #if cv2.waitKey(1) & 0xFF == 27:
+        #   exit()
         # condition = np.stack((mask,)*3, axis=-1) > 0
         # condition = mask
         if self.counter % 1 == 0:
-            bg_image = cv2.GaussianBlur(image, (11, 11), 0)
-            #yuv = cv2.cvtColor(bg_image, cv2.COLOR_RGB2YUV)
-            #y, u, v = cv2.split(yuv)
-            #y = 0.1 * y
-            #y = y.astype(np.uint8)
-            #yuv = cv2.merge((y, u, v))
-            #bg_image = cv2.cv2.cvtColor(yuv, cv2.COLOR_YUV2RGB)
+            bg_image = cv2.GaussianBlur(image, (21, 21), 0)
             self.prev_bg = bg_image.copy()
         # else:
         #    bg_image = self.prev_bg.copy()

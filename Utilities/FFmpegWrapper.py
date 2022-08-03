@@ -54,51 +54,54 @@ fftdnoiz
 import subprocess
 
 
-def decode_audio(audio_src, audio_config):
+def decode_audio(audio_src, dst_audio_config, src_audio_config):
     print('audio decode\n\n\n')
     audio_decoding_process = subprocess.Popen(['ffmpeg',
                                                '-thread_queue_size', '1000000',
-                                               '-i', audio_src[0],
-                                               '-ac', str(audio_config.channels),
-                                               '-ar', str(audio_config.sample_rate),
+                                               '-i', audio_src,
+                                               '-ac', str(dst_audio_config.channels),
+                                               '-ar', str(dst_audio_config.sample_rate),
                                                '-f', 's16le',
                                                'pipe:1'], stdout=subprocess.PIPE)
     return audio_decoding_process
 
-def decode_video(video_src, video_config):
+
+def decode_video(video_src, dst_video_config, src_video_config):
+    print('video decode\n\n\n\n\n')
     video_decoding_process = subprocess.Popen(['ffmpeg',
+                                               # '-loglevel', 'quiet',
                                                '-thread_queue_size', '1000000',
-                                               '-i', video_src[0],
+                                               '-i', video_src,
                                                '-f', 'rawvideo',
-                                               '-pix_fmt' ,'bgr24',
+                                               '-pix_fmt', 'bgr24',
                                                'pipe:1'], stdout=subprocess.PIPE)
     return video_decoding_process
 
 
-def encode_video(audio_src, video_config, dst):
+def encode_video(audio_src, dst_video_config, src_video_config, dst):
     print('video encode\n\n\n\n\n')
-    print('audio src :           ',audio_src)
     # encoding process with aggregator
     encoding_process = subprocess.Popen(['ffmpeg',
-                       '-re',
-                       '-i', audio_src[0],
-                      '-f', 'rawvideo',
-                      '-s', '854x480',
-                      '-pix_fmt', 'bgr24',
-                      '-thread_queue_size', '10000',
-                      '-i', 'pipe:0',
-                      '-c:v', 'libx264',
-                      '-c:a', 'copy',
-                      # '-maxrate','50k',
-                      # '-bufsize','12000k',
-                      '-color_primaries', 'bt709',
-                      '-profile:v', 'main',
-                      '-pix_fmt', 'yuv420p',
-                      '-crf', '27',
-                      '-preset', 'veryfast',
-                      '-g', '40',
-                      '-f','flv',
-                      dst], stdin=subprocess.PIPE)
+                                         '-re',
+                                         '-i', audio_src,
+                                         '-f', 'rawvideo',
+                                         '-s', f'{dst_video_config.width}x{dst_video_config.height}',
+                                         '-r', str(src_video_config.fps),
+                                         '-pix_fmt', 'bgr24',
+                                         '-thread_queue_size', '10000',
+                                         '-i', 'pipe:0',
+                                         '-c:v', 'libx264',
+                                         '-c:a', 'copy',
+                                         # '-maxrate','50k',
+                                         # '-bufsize','12000k',
+                                         '-color_primaries', 'bt709',
+                                         '-profile:v', 'main',
+                                         '-pix_fmt', 'yuv420p',
+                                         '-crf', '27',
+                                         '-preset', 'veryfast',
+                                         '-g', str(2*src_video_config.fps),
+                                         '-f', 'flv',
+                                         dst], stdin=subprocess.PIPE)
     '''
     encoding_process = subprocess.Popen(['ffmpeg',
                                          '-re',
@@ -123,20 +126,21 @@ def encode_video(audio_src, video_config, dst):
         '''
     return encoding_process
 
-def encode_audio(video_src, audio_config, dst):
+
+def encode_audio(video_src, dst_audio_config, src_audio_config, dst):
     print('audio encode\n\n\n\n\n')
     # encoding process with aggregator
     encoding_process = subprocess.Popen(['ffmpeg',
                                          '-re',
-                                         '-i', video_src[1],
-                                         '-c:v', 'copy',
+                                         '-i', video_src,
                                          '-f', 's16le',
-                                         '-ac', str(audio_config.channels),
-                                         '-ar', str(audio_config.sample_rate),
+                                         '-ac', str(dst_audio_config.channels),
+                                         '-ar', str(dst_audio_config.sample_rate),
                                          '-thread_queue_size', '1000000',
                                          '-i', 'pipe:0',
                                          '-f', 'flv',
                                          '-c:a', 'aac',
+                                         '-c:v', 'copy',
                                          '-q:a', '1',
                                          '-aac_coder', 'fast',
                                          dst], stdin=subprocess.PIPE)

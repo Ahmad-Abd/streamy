@@ -33,7 +33,6 @@ class ThresholdBasedAudioDenoiser():
     def fuzzy_thresholding(self, data):
         def gaussian(x, mu, sig):
             return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)) + 0.000001)
-
         thresholded_data = data.copy()
         mask = thresholded_data <= self.threshold
         masked_diff = thresholded_data[mask] - self.threshold
@@ -49,7 +48,7 @@ class ThresholdBasedAudioDenoiser():
     def process(self, block):
         # for more than one channel use numpy.apply_along_axis or take mean on axis 1
         # convert the bytes block to numpy array
-        block = np.frombuffer(block, dtype=self.sample_type)
+        block = np.frombuffer(block, dtype=np.int16)
         self.old_overlap_chunk.extend(block.tolist()[:(self.block_size // 2)])
         self.frames.append(self.old_overlap_chunk.copy())
         self.frames.append(block.tolist())
@@ -73,7 +72,7 @@ class ThresholdBasedAudioDenoiser():
             reconstructed[:self.block_size // 2] = reconstructed[:self.block_size // 2] + self.buffer
             results.extend(reconstructed[:(self.block_size // 2)].copy().tolist())
             self.buffer = reconstructed[(self.block_size // 2):].copy()
-        processed_block = np.array(results, dtype=self.sample_type).tobytes()
+        processed_block = np.array(results, dtype=np.int16).tobytes()
         self.frames = []
         # return the result
         return processed_block

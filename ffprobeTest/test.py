@@ -1,6 +1,7 @@
 import subprocess
 import json
-
+from Messages.AudioConfig import AudioConfig
+from Messages.VideoConfig import VideoConfig
 
 class AudioStreamInfo:
     def __init__(self,
@@ -14,11 +15,11 @@ class AudioStreamInfo:
         self.bit_rate = bit_rate
 
     def from_json(self, json_object):
-        self.codec_name = json_object['codec_name']
-        self.sample_rate = json_object['sample_rate']
-        self.channels = json_object['channels']
+        self.codec_name = json_object['streams'][0]['codec_name']
+        self.sample_rate = json_object['streams'][0]['sample_rate']
+        self.channels = json_object['streams'][0]['channels']
         try:
-            self.bit_rate = json_object['bit_rate']
+            self.bit_rate = json_object['format']['bit_rate']
         except:
             self.bit_rate = None
 
@@ -43,17 +44,17 @@ class VideoStreamInfo:
         self.bit_rate = bit_rate
 
     def from_json(self, json_object):
-        self.codec_name = json_object['codec_name']
-        self.fps = int(int(json_object['r_frame_rate'].split('/')[0]))
+        self.codec_name = json_object['streams'][0]['codec_name']
+        self.fps = int(int(json_object['streams'][0]['r_frame_rate'].split('/')[0]))
         if self.fps // 1000 != 0:
             self.fps //= 1000
         elif self.fps // 100 != 0:
             self.fps //= 100
-        self.width = json_object['width']
-        self.height = json_object['height']
+        self.width = json_object['streams'][0]['width']
+        self.height = json_object['streams'][0]['height']
         try:
-            self.bit_rate = json_object['bit_rate']
-        except:
+            self.bit_rate = json_object['format']['bit_rate']
+        except Exception as e:
             self.bit_rate = None
 
     def __str__(self):
@@ -74,16 +75,15 @@ def get_stream_info(url, stream_type='v', writer_mode='json'):
     p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = p.communicate()
     if p.returncode != 0:
-        print(error.decode('utf8'))
         return None
     # print(int(json.loads(output.decode('utf8'))['streams'][0]['time_base'][2:])/1000)
     if str.lower(stream_type) in ['a', 'audio']:
-        audio_info = AudioStreamInfo()
-        audio_info.from_json(json.loads(output.decode('utf8'))['streams'][0])
+        audio_info = AudioConfig()
+        audio_info.from_json(json.loads(output.decode('utf8')))
         return audio_info
     if str.lower(stream_type) in ['v', 'video']:
-        video_info = VideoStreamInfo()
-        video_info.from_json(json.loads(output.decode('utf8'))['streams'][0])
+        video_info = VideoConfig()
+        video_info.from_json(json.loads(output.decode('utf8')))
         return video_info
 
 

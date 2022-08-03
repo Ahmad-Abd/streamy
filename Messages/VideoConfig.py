@@ -3,7 +3,7 @@ from Messages.Message import Message
 
 class VideoConfig(Message):
     def __init__(self,
-                 codec_name='h264',
+                 codec_name='None',
                  fps=30,
                  width=640,
                  height=360,
@@ -15,17 +15,17 @@ class VideoConfig(Message):
         self.bit_rate = bit_rate
 
     def from_json(self, json_object):
-        self.codec_name = json_object['codec_name']
-        self.fps = int(int(json_object['r_frame_rate'].split('/')[0]))
+        self.codec_name = json_object['streams'][0]['codec_name']
+        self.fps = int(int(json_object['streams'][0]['r_frame_rate'].split('/')[0]))
         if self.fps // 1000 != 0:
             self.fps //= 1000
         elif self.fps // 100 != 0:
             self.fps //= 100
-        self.width = json_object['width']
-        self.height = json_object['height']
+        self.width = json_object['streams'][0]['width']
+        self.height = json_object['streams'][0]['height']
         try:
-            self.bit_rate = json_object['bit_rate']
-        except:
+            self.bit_rate = json_object['format']['bit_rate']
+        except Exception as e:
             self.bit_rate = None
 
     def __str__(self):
@@ -33,4 +33,4 @@ class VideoConfig(Message):
                f'fps : {self.fps}, ' \
                f'width : {self.width}, ' \
                f'height :  {self.height}, ' \
-               f'bit rate : {self.bit_rate}'
+               f'bit rate : {self.bit_rate} bit/s'

@@ -3,7 +3,7 @@ import numpy as np
 
 class AudioConfig(Message):
     def __init__(self,
-                 codec_name='aac',
+                 codec_name='None',
                  sample_rate=44100,
                  block_size=2048,
                  dtype = np.int16,
@@ -17,11 +17,11 @@ class AudioConfig(Message):
         self.bit_rate = bit_rate
 
     def from_json(self, json_object):
-        self.codec_name = json_object['codec_name']
-        self.sample_rate = json_object['sample_rate']
-        self.channels = json_object['channels']
+        self.codec_name = json_object['streams'][0]['codec_name']
+        self.sample_rate = json_object['streams'][0]['sample_rate']
+        self.channels = json_object['streams'][0]['channels']
         try:
-            self.bit_rate = json_object['bit_rate']
+            self.bit_rate = json_object['format']['bit_rate']
         except:
             self.bit_rate = None
 
@@ -29,4 +29,4 @@ class AudioConfig(Message):
         return f'codec : {self.codec_name}, ' \
                f'sample rate : {self.sample_rate}, ' \
                f'channels : {self.channels}, ' \
-               f'bit rate : {self.bit_rate}'
+               f'bit rate : {self.bit_rate} bit/s'

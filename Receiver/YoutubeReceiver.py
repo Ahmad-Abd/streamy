@@ -58,7 +58,7 @@ class YoutubeReceiver(Receiver):
 
     def receive(self, url):
         self.__set_src(url)
-        video_src = self.__get_video_url()
+        video_src = self.__get_video_url(resolution=str(self.video_config.height)+'p')
         audio_src = self.__get_audio_url()
         if len(video_src) == 0 or len(audio_src) == 0:
             raise ReceivingURLNotFoundException()
