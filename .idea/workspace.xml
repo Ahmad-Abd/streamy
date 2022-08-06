@@ -6,17 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="be94fe52-e6d7-47fc-9fc7-741a32c4552f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manger/Manger.py" beforeDir="false" afterPath="$PROJECT_DIR$/Manger/Manger.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manger/StreamyManger.py" beforeDir="false" afterPath="$PROJECT_DIR$/Manger/StreamyManger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Messages/AudioConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/Messages/AudioConfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Messages/VideoConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/Messages/VideoConfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProcessingSystems/AudioProcessingSystem/PsdEstimationBasedAudioDenoiser/PsdEstimationBasedAudioDenoiser.py" beforeDir="false" afterPath="$PROJECT_DIR$/ProcessingSystems/AudioProcessingSystem/PsdEstimationBasedAudioDenoiser/PsdEstimationBasedAudioDenoiser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProcessingSystems/AudioProcessingSystem/ThresholdingBasedAudioDenoiser/ThresholdBasedAudioDenoiser.py" beforeDir="false" afterPath="$PROJECT_DIR$/ProcessingSystems/AudioProcessingSystem/ThresholdingBasedAudioDenoiser/ThresholdBasedAudioDenoiser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProcessingSystems/VideoProcessingSystems/SelfieSegmetationBasedCAE.py" beforeDir="false" afterPath="$PROJECT_DIR$/ProcessingSystems/VideoProcessingSystems/SelfieSegmetationBasedCAE.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receiver/YoutubeReceiver.py" beforeDir="false" afterPath="$PROJECT_DIR$/Receiver/YoutubeReceiver.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/FFmpegWrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/FFmpegWrapper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ffprobeTest/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/ffprobeTest/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

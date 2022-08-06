@@ -71,7 +71,7 @@ class StreamyManger(Manger):
             processing_system = self.__get_vps(request.vps_type)
             assert processing_system is not None,exit(-1)
             # set requests video config in the created vps
-            processing_system.size = (request.video_config.width,request.video_config.height)
+            processing_system.resize(request.video_config.width ,request.video_config.height)
             # chunk_size is equal to size of image * 3 is number of channels
             chunk_size = request.video_config.width * request.video_config.height * 3
         # check if audio config in the request in not none then create and aps using __get_aps()

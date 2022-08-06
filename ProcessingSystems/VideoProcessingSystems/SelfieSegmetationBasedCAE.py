@@ -17,7 +17,8 @@ class SelfieSegmetationBasedCAE(ProcessingSystem):
     def __init__(self,
                  accurate=False,
                  size=(854, 480), # w x h
-                 erode_kernel_size=19):
+                 erode_kernel_size=19,
+                 blur_kernel_size=13):
         # accurate model 0 (slower but more accurate) use x*x image as input
         # faster model 1 (faster but less accurate) use x*x image as input
         model_index = 0 if accurate is True else 1
@@ -34,6 +35,13 @@ class SelfieSegmetationBasedCAE(ProcessingSystem):
         self.prev_bg = None
         # counter
         self.counter = 0
+        # blur kernel size
+        self.blur_kernel_size = blur_kernel_size
+
+    def resize(self,width ,height):
+        self.size = (width ,height)
+        self.kernel = np.ones((int(0.04*height,)) * 2, dtype=np.uint8)
+        self.blur_kernel_size = int(0.026 * height) + 1
 
     def get_biggest_contour_mask(self, mask, method=1):
         # create solid rgg black image depending on mask size
@@ -89,7 +97,7 @@ class SelfieSegmetationBasedCAE(ProcessingSystem):
         # condition = np.stack((mask,)*3, axis=-1) > 0
         # condition = mask
         if self.counter % 1 == 0:
-            bg_image = cv2.GaussianBlur(image, (21, 21), 0)
+            bg_image = cv2.GaussianBlur(image, (self.blur_kernel_size, self.blur_kernel_size), 0)
             self.prev_bg = bg_image.copy()
         # else:
         #    bg_image = self.prev_bg.copy()
