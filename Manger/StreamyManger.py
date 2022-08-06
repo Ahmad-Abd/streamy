@@ -45,6 +45,7 @@ class StreamyManger(Manger):
         :param vps_type:str type of Video Processing System valid types ['selfie','motion']
         :return: object of ProcessingSystem
         """
+        print(vps_type)
         if vps_type == 'selfie':
             print('\n\033[1;94mInitializing Selfie Segmentation Based CAE...\033[0m')
             return SelfieSegmetationBasedCAE()
