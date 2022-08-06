@@ -29,12 +29,13 @@ class StreamyManger(Manger):
         """
         if aps_type == 'threshold':
             print('\n\033[1;94mInitializing Threshold Based Audio Denoiser...\033[0m')
-            return ThresholdBasedAudioDenoiser()
+            return ThresholdBasedAudioDenoiser(threshold=7)
         if aps_type == 'psd':
             print('\n\033[1;94mInitializing PSD Estimation Based Audio Denoiser...\033[0m')
+            # get block soze from request!!!!!
             return PsdEstimationBasedAudioDenoiser(threshold=0.001, block_size=1024, time_smoothing_constant=0.2)
         if aps_type == 'demucs':
-            print('\n\033[1;94mInitializing Demucs Estimation Based Audio Denoiser...\033[0m')
+            print('\n\033[1;94mInitializing Demucs Based Audio Denoiser...\033[0m')
             return DemucsBasedAudioDenoiser()
         print('\033[1;91m[Error] Not Supported Audio Processing System....\033[0m')
         exit(-1)
@@ -103,19 +104,23 @@ class StreamyManger(Manger):
         :return:
         """
         for url in urls:
-            url_stream_info = get_stream_info(url, stream_type=stream_type)
-            if stream_type == 'v':
-                if url_stream_info.codec_name in StreamyManger.SUPPORTED_VIDEO_CODEC:
-                    print(f'\033[1mInput Video Stream Info => {url_stream_info}\033[0m\n')
-                    return url ,url_stream_info
-            elif stream_type == 'a':
-                if url_stream_info.codec_name in StreamyManger.SUPPORTED_AUDIO_CODEC:
-                    print(f'\033[1mInput Audio Stream Info => {url_stream_info}\033[0m')
-                    return url ,url_stream_info
-            else:
-                # not detected config in the request
-                print('\033[1;91m[Error] Not Detected Config....\033[0m')
-                exit(-1)
+            try:
+                url_stream_info = get_stream_info(url, stream_type=stream_type)
+                if stream_type == 'v':
+                    if url_stream_info.codec_name in StreamyManger.SUPPORTED_VIDEO_CODEC:
+                        print(f'\033[1mInput Video Stream Info => {url_stream_info}\033[0m\n')
+                        return url ,url_stream_info
+                elif stream_type == 'a':
+                    if url_stream_info.codec_name in StreamyManger.SUPPORTED_AUDIO_CODEC:
+                        print(f'\033[1mInput Audio Stream Info => {url_stream_info}\033[0m')
+                        return url ,url_stream_info
+                else:
+                    # not detected config in the request
+                    print('\033[1;91m[Error] Not Detected Config....\033[0m')
+                    exit(-1)
+            except:
+                print('Error in get_info')
+                continue
         print('\033[1;91m[Error] Streams Codec Are Not Supported....\033[0m')
         exit(-1)
 

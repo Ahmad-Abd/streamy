@@ -58,7 +58,12 @@ class YoutubeReceiver(Receiver):
 
     def receive(self, url):
         self.__set_src(url)
-        video_src = self.__get_video_url(resolution=str(self.video_config.height)+'p')
+        #video_src = self.__get_video_url(resolution=str(self.video_config.height)+'p')
+        try:
+            video_src = self.__get_video_url(resolution=str(self.video_config.height) + 'p')
+        except:
+            print('No Video Config so 480p stream will received')
+            video_src = self.__get_video_url(resolution='480p')
         audio_src = self.__get_audio_url()
         if len(video_src) == 0 or len(audio_src) == 0:
             raise ReceivingURLNotFoundException()

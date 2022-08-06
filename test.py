@@ -20,16 +20,19 @@ import numpy as np
 # news
 #stream_url = 'https://youtu.be/7SsNdqQQ69Y'
 #stream_url = 'https://youtu.be/4WSCQwf1Sr8'
-stream_url = 'https://youtu.be/tKoe3KU5ouk'
+#stream_url = 'https://youtu.be/tKoe3KU5ouk'
+#stream_url = 'https://youtu.be/Y0ErYtveYuE'
+#stream_url = 'https://youtu.be/KQdGZpe0v2c'
+stream_url = 'https://youtu.be/4O_qWVYyiNM'
 rtmp_server_url = 'rtmp://a.rtmp.youtube.com/live2/'
 rtmp_server_key = '3wgb-cv03-ckyy-jmxc-cw42'
 #rtmp_server_url = 'rtmps://dc4-1.rtmp.t.me/s/'
 #rtmp_server_key = '1457753449:dxkMKpmmBgVicOZwA7kAaA'
-#audio_config = AudioConfig(sample_rate=16000,block_size=1024,channels=1,dtype=np.int16)
-audio_config = None
-#video_config = None
+audio_config = AudioConfig(sample_rate=44100,block_size=2048,channels=1,dtype=np.int16)
+#audio_config = None
+video_config = None
 #video_config = VideoConfig(width=854,height=480)
-video_config = VideoConfig(width=426,height=240)
+#video_config = VideoConfig(width=426,height=240)
 # build the request
 request_example = StreamyFormRequest(
     stream_url=stream_url,
@@ -38,7 +41,7 @@ request_example = StreamyFormRequest(
     audio_config=audio_config,
     video_config=video_config,
     secure_mode=False,
-    aps_type='demucs',
+    aps_type='threshold',
     vps_type='selfie')
 
 # define the manger
