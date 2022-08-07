@@ -7,9 +7,8 @@ from Manger.Manger import Manger
 from Sender.SenderFactory import SenderFactory
 from Utilities.FFmpegWrapper import *
 from ffprobeTest.test import *
-from sklearn.linear_model import LinearRegression
-import pandas as pd
 import numpy as np
+
 class StreamyManger(Manger):
     # create a ReceiverFactory as a static object
     RECEIVER_FACTORY = ReceiverFactory()
@@ -29,11 +28,11 @@ class StreamyManger(Manger):
         """
         if aps_type == 'threshold':
             print('\n\033[1;94mInitializing Threshold Based Audio Denoiser...\033[0m')
-            return ThresholdBasedAudioDenoiser(threshold=7)
+            return ThresholdBasedAudioDenoiser(threshold=10)
         if aps_type == 'psd':
             print('\n\033[1;94mInitializing PSD Estimation Based Audio Denoiser...\033[0m')
-            # get block soze from request!!!!!
-            return PsdEstimationBasedAudioDenoiser(threshold=0.001, block_size=1024, time_smoothing_constant=0.2)
+            return PsdEstimationBasedAudioDenoiser(threshold=0.001,
+                                                   time_smoothing_constant=0.2)
         if aps_type == 'demucs':
             print('\n\033[1;94mInitializing Demucs Based Audio Denoiser...\033[0m')
             return DemucsBasedAudioDenoiser()
@@ -185,12 +184,9 @@ class StreamyManger(Manger):
         while True:
             # read data from the receiver stdout pipe
             untreated_data_chunk = untreated_raw_data_stdout.read(chunk_size)
-            #cv2.imshow('hello', np.frombuffer(untreated_data_chunk,dtype=np.uint8).reshape(480,854,3))
-            #if cv2.waitKey(1) & 0xFF == 27:
-            #    exit()
+            # check about if it is not none
             if untreated_data_chunk:
                 # process data using processing system
                 treated_data_chunk = processing_system.process(untreated_data_chunk)
-                #print(treated_data_chunk)
                 # write processed data to the sender stdin pipe
                 treated_raw_data_stdin.write(treated_data_chunk)
