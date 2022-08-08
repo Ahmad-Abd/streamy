@@ -76,6 +76,7 @@ def get_stream_info(url, stream_type='v', writer_mode='json'):
     output, error = p.communicate()
     if p.returncode != 0:
         return None
+    #print(output.decode('utf8'))
     # print(int(json.loads(output.decode('utf8'))['streams'][0]['time_base'][2:])/1000)
     if str.lower(stream_type) in ['a', 'audio']:
         audio_info = AudioConfig()

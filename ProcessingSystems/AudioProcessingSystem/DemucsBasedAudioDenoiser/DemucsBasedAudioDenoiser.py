@@ -8,7 +8,6 @@ from ProcessingSystems.AudioProcessingSystem.DemucsBasedAudioDenoiser.denoiser.d
 from scipy.io import wavfile
 import numpy as np
 from IPython import display as disp
-import pyaudio
 import time
 import os
 import matplotlib.pyplot as plt

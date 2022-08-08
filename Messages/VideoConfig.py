@@ -16,13 +16,9 @@ class VideoConfig(Message):
 
     def from_json(self, json_object):
         self.codec_name = json_object['streams'][0]['codec_name']
-        self.fps = int(int(json_object['streams'][0]['r_frame_rate'].split('/')[0]))
-        if self.fps // 1000 != 0:
-            self.fps //= 1000
-        elif self.fps // 100 != 0:
-            self.fps //= 100
-        self.width = json_object['streams'][0]['width']
-        self.height = json_object['streams'][0]['height']
+        a = int(json_object['streams'][0]['r_frame_rate'].split('/')[0])
+        b = int(json_object['streams'][0]['r_frame_rate'].split('/')[1])
+        self.fps = round(a/b)
         try:
             self.bit_rate = json_object['format']['bit_rate']
         except Exception as e:

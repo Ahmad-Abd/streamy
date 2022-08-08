@@ -1,5 +1,4 @@
 from datetime import datetime
-import pyaudio
 import subprocess
 from pafy import pafy
 import ffmpeg
@@ -97,7 +96,8 @@ class SelfieSegmetationBasedCAE(ProcessingSystem):
         # condition = np.stack((mask,)*3, axis=-1) > 0
         # condition = mask
         if self.counter % 1 == 0:
-            bg_image = cv2.GaussianBlur(image, (self.blur_kernel_size, self.blur_kernel_size), 0)
+            bg_image = cv2.GaussianBlur(image, (27,27), 0)
+            #bg_image = cv2.GaussianBlur(image, (self.blur_kernel_size, self.blur_kernel_size), 0)
             self.prev_bg = bg_image.copy()
         # else:
         #    bg_image = self.prev_bg.copy()

@@ -40,7 +40,7 @@ request_example = StreamyFormRequest(
     audio_config=audio_config,
     video_config=video_config,
     secure_mode=False,
-    aps_type='threshold',
+    aps_type='demucs',
     vps_type='selfie')
 
 # define the manger

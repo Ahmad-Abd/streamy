@@ -32,6 +32,8 @@ class StreamyManger(Manger):
         if aps_type == 'psd':
             print('\n\033[1;94mInitializing PSD Estimation Based Audio Denoiser...\033[0m')
             return PsdEstimationBasedAudioDenoiser(threshold=0.001,
+                                                   fs = 16000,
+                                                   block_size=1024,
                                                    time_smoothing_constant=0.2)
         if aps_type == 'demucs':
             print('\n\033[1;94mInitializing Demucs Based Audio Denoiser...\033[0m')

@@ -15,7 +15,7 @@ from Manger.StreamyManger import StreamyManger
 from Messages.AudioConfig import AudioConfig
 from Messages.StreamyFormRequest import StreamyFormRequest
 from Messages.VideoConfig import VideoConfig
-
+import threading
 
 class Ui_Form(object):
 
@@ -131,7 +131,12 @@ class Ui_Form(object):
                                                 radio_btn4, aps_type, sample_rate, block_size)
 
             print(request_example)
+            print('video configgg:' ,request_example.video_config)
+            print('audio configgg:' ,request_example.audio_config)
             manger = StreamyManger()
+            self.Form.close()
+            #x = threading.Thread(target=manger.serve_request, args=(request_example,))
+            #x.start()
             manger.serve_request(request=request_example)
 
     def setupUi(self, Form):
