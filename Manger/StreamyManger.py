@@ -179,9 +179,9 @@ class StreamyManger(Manger):
                                             dst_video_config=request.video_config,
                                             src_video_config=input_video_src_config,
                                             dst=destination_url)
-        # attach process to sender and receiver!!!!!!!!!!!!!!!!
         # untreated raw data is the decoding process stdout
         untreated_raw_data_stdout = decoding_process.stdout
+        # treated raw data is the encoding process stdout
         treated_raw_data_stdin = encoding_process.stdin
         while True:
             # read data from the receiver stdout pipe

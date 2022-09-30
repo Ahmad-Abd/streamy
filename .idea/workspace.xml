@@ -5,16 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="be94fe52-e6d7-47fc-9fc7-741a32c4552f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/AudioTest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manger/StreamyManger.py" beforeDir="false" afterPath="$PROJECT_DIR$/Manger/StreamyManger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Messages/VideoConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/Messages/VideoConfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProcessingSystems/AudioProcessingSystem/DemucsBasedAudioDenoiser/DemucsBasedAudioDenoiser.py" beforeDir="false" afterPath="$PROJECT_DIR$/ProcessingSystems/AudioProcessingSystem/DemucsBasedAudioDenoiser/DemucsBasedAudioDenoiser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProcessingSystems/VideoProcessingSystems/SelfieSegmetationBasedCAE.py" beforeDir="false" afterPath="$PROJECT_DIR$/ProcessingSystems/VideoProcessingSystems/SelfieSegmetationBasedCAE.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/FFmpegWrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/FFmpegWrapper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ffprobeTest/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/ffprobeTest/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ffprobeTest/final.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ffprobeTest/test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ffprobeTest/test2.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +54,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/TestVideo.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
