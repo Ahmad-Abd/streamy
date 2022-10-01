@@ -1,0 +1,15 @@
+numpy~=1.21.2
+pathlib~=1.0.1
+PyQt5~=5.15.7
+pafy~=0.5.5
+julius~=0.2.6
+torch~=1.11.0+cpu
+argparse~=1.4.0
+sounddevice~=0.4.4
+torchaudio~=0.11.0+cpu
+pystoi~=0.3.3
+matplotlib~=3.4.3
+scipy~=1.7.1
+ipython~=7.19.0
+opencv-python~=4.5.4.60
+mediapipe~=0.8.8.1
