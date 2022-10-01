@@ -13,7 +13,7 @@ This System Support Multiples Ways:
 ## Installation
 **<font color="red">Installation guide is coming soon..</font>**
 
-##Content Aware Video Encoding (CAE)
+## Content Aware Video Encoding (CAE)
 The main idea is to remove unnecessary high frequencies from the less important area of 
 the frames. we got the main idea from [1].
 
@@ -26,7 +26,7 @@ In this system MOG2 Background subtraction [2] as a **ROI Detection Algorithm** 
 this method is considered less effective and efficient in 
 normal condition because it is required a very stable camera
 ,so in the future, we aim to use a **Free Moving Camera Background Subtraction Algorithm**.
-<hr>
+
 
 ## Speech Enhancement
 For **Speech Enhancement** of stream we've implement three different methods
